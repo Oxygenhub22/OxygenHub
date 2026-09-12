@@ -1,0 +1,153 @@
+--[[
+    OXYGEN HUB - REAL UI MATCH v14
+    ENCRYPTED BY OXYBLOX | UI_FIX: 100% | SPEED: 350
+    BG_ID: 129710791041030 | SMART_COLLECT: ON
+]]
+
+local _0x_Map = {
+    ["\107\101\121"] = "\79\120\121\103\101\110\72\117\98\66\108\111\120\70\114\117\105\116\115",
+    ["\108\110\107"] = "\104\116\116\112\115\58\47\47\100\105\115\99\111\114\100\46\103\103\47\74\119\88\57\69\80\54\82\113",
+    ["\97\115\115"] = "\114\98\120\97\115\115\101\116\105\100\58\47\47\49\50\57\55\49\48\55\57\49\48\52\49\48\51\48",
+    ["\115\118\99"] = {
+        ["\49"] = game:GetService("\80\108\97\121\101\114\115"),
+        ["\50"] = game:GetService("\82\117\110\83\101\114\118\105\99\101"),
+        ["\51"] = game:GetService("\84\119\101\101\110\83\101\114\118\105\99\101")
+    }
+}
+
+local _0x_ST = { [1] = false, [2] = false }
+local _0x_IG = {}
+local _0x_LP = _0x_Map["\115\118\99"]["\49"].LocalPlayer
+local _0x_TW = _0x_Map["\115\118\99"]["\51"]
+local _0x_RN = _0x_Map["\115\118\99"]["\50"]
+
+-- 0xAntiSit_Noclip_Core
+_0x_RN.Stepped:Connect(function()
+    if _0x_ST[1] and _0x_LP.Character then
+        local _hum = _0x_LP.Character:FindFirstChildOfClass("\72\117\109\97\110\111\105\100")
+        if _hum then _hum.Sit = false _hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false) end
+        for _, v in pairs(_0x_LP.Character:GetDescendants()) do
+            if v:IsA("\66\97\115\101\80\97\114\116") then v.CanCollide = false end
+        end
+    end
+end)
+
+local function _0x_SCANNER()
+    local _r = {}
+    local _d = workspace:GetDescendants()
+    for i=1, #_d do
+        local v = _d[i]
+        if v.Name:find("\67\104\101\115\116") and not _0x_IG[v] then
+            if v:IsA("\66\97\115\101\80\97\114\116") or v:IsA("\77\111\100\101\108") then table.insert(_r, v) end
+        end
+    end
+    return _r
+end
+
+local function _0x_GLIDE(_target_cf)
+    local _hrp = _0x_LP.Character.HumanoidRootPart
+    local _info = TweenInfo.new((_hrp.Position - _target_cf.p).Magnitude / 350, Enum.EasingStyle.Linear)
+    local _g = _0x_TW:Create(_hrp, _info, {CFrame = _target_cf})
+    _g:Play() _g.Completed:Wait()
+end
+
+task.spawn(function()
+    while task.wait(0.1) do
+        if _0x_ST[1] then
+            local _f = _0x_SCANNER()
+            if #_f > 0 then
+                local _trg = nil
+                local _md = 9e9
+                for i=1, #_f do
+                    local _o = _f[i]
+                    local _p = _o:IsA("\77\111\100\101\108") and (_o.PrimaryPart or _o:FindFirstChildWhichIsA("\66\97\115\101\80\97\114\116")) or _o
+                    if _p then local _d = (_0x_LP.Character.HumanoidRootPart.Position - _p.Position).Magnitude
+                    if _d < _md then _md = _d; _trg = _o end end
+                end
+                if _trg then
+                    local _fp = _trg:IsA("\77\111\100\101\108") and (_trg.PrimaryPart or _trg:FindFirstChildWhichIsA("\66\97\115\101\80\97\114\116")) or _trg
+                    _0x_GLIDE(CFrame.new(_fp.Position + Vector3.new(0, 8, 0)))
+                    task.wait(0.2)
+                    for _, it in pairs(_trg:GetDescendants()) do
+                        if it:IsA("\67\108\105\99\107\68\101\116\101\99\116\111\114") then fireclickdetector(it)
+                        elseif it:IsA("\80\114\111\120\105\109\105\116\121\80\114\111\109\112\116") then fireproximityprompt(it) end
+                    end
+                    _0x_IG[_trg] = true task.wait(0.1)
+                end
+            else _0x_IG = {} task.wait(2) end
+        end
+    end
+end)
+
+local function _0x_APPLY_BG(parent, trans)
+    local img = Instance.new("\73\109\97\103\101\76\97\98\101\108", parent)
+    img.Size = UDim2.new(1, 0, 1, 0); img.Image = _0x_Map["\97\115\115"]; img.ImageTransparency = trans or 0.2
+    img.BackgroundTransparency = 1; img.ScaleType = "\67\114\111\112"; img.ZIndex = parent.ZIndex
+    Instance.new("\85\73\67\111\114\110\101\114", img).CornerRadius = UDim.new(0, 10)
+    local tint = Instance.new("\70\114\97\109\101", parent)
+    tint.Size = UDim2.new(1,0,1,0); tint.BackgroundColor3 = Color3.fromRGB(0,0,0); tint.BackgroundTransparency = 0.4; tint.ZIndex = parent.ZIndex
+    Instance.new("\85\73\67\111\114\110\101\114", tint).CornerRadius = UDim.new(0, 10)
+end
+
+local function _0x_MAIN_UI()
+    local _gui = Instance.new("\83\99\114\101\101\110\71\117\105", game.CoreGui)
+    local _frame = Instance.new("\70\114\97\109\101", _gui)
+    _frame.Size = UDim2.new(0, 280, 0, 300); _frame.Position = UDim2.new(0.5, -140, 0.5, -150)
+    _frame.BackgroundColor3 = Color3.fromRGB(15,15,20); _frame.Active = true; _frame.Draggable = true
+    Instance.new("\85\73\67\111\114\110\101\114", _frame).CornerRadius = UDim.new(0, 15)
+    local str = Instance.new("\85\73\83\116\114\111\107\101", _frame); str.Color = Color3.fromRGB(0, 150, 255); str.Thickness = 3
+    _0x_APPLY_BG(_frame, 0.1)
+
+    local tit = Instance.new("\84\101\120\116\76\97\98\101\108", _frame)
+    tit.Size = UDim2.new(1, 0, 0, 60); tit.Text = "\79\120\121\103\101\110\72\117\98"; tit.TextColor3 = Color3.fromRGB(0, 200, 255)
+    tit.Font = "\71\111\116\104\97\109\66\111\108\100"; tit.TextSize = 24; tit.BackgroundTransparency = 1; tit.ZIndex = 5
+
+    local function _btn(n, y, id)
+        local b = Instance.new("\84\101\120\116\66\117\116\116\111\110", _frame)
+        b.Size = UDim2.new(0.85, 0, 0, 50); b.Position = UDim2.new(0.075, 0, 0, y)
+        b.BackgroundColor3 = Color3.fromRGB(20,20,30); b.Text = n .. "\58\32\79\70\70"; b.TextColor3 = Color3.fromRGB(255,255,255)
+        b.Font = "\71\111\116\104\97\109\66\111\108\100"; b.ZIndex = 5; Instance.new("\85\73\67\111\114\110\101\114", b)
+        _0x_APPLY_BG(b, 0.3)
+        b.MouseButton1Click:Connect(function()
+            _0x_ST[id] = not _0x_ST[id]; b.Text = n .. (_0x_ST[id] and "\58\32\79\78" or "\58\32\79\70\70")
+            b.BackgroundColor3 = _0x_ST[id] and Color3.fromRGB(0, 140, 220) or Color3.fromRGB(20,20,30)
+        end)
+    end
+    _btn("\65\117\116\111\32\67\104\101\115\116", 80, 1)
+    _btn("\67\104\101\115\116\32\69\83\80", 145, 2)
+    local ft = Instance.new("\84\101\120\116\76\97\98\101\108", _frame)
+    ft.Size = UDim2.new(1, 0, 0, 40); ft.Position = UDim2.new(0, 0, 0, 230); ft.Text = "\67\104\101\115\116\115\32\70\111\117\110\100\58\32\48"
+    ft.TextColor3 = Color3.fromRGB(255,255,255); ft.BackgroundTransparency = 1; ft.ZIndex = 5; ft.Font = "\71\111\116\104\97\109"
+    task.spawn(function() while _gui.Parent do ft.Text = "\67\104\101\115\116\115\32\70\111\117\110\100\58\32" .. tostring(#_0x_SCANNER()) task.wait(1) end end)
+end
+
+local function _0x_START()
+    local kgui = Instance.new("\83\99\114\101\101\110\71\117\105", game.CoreGui)
+    local kf = Instance.new("\70\114\97\109\101", kgui)
+    kf.Size = UDim2.new(0, 360, 0, 320); kf.Position = UDim2.new(0.5, -180, 0.5, -160)
+    kf.BackgroundColor3 = Color3.fromRGB(15,15,20); kf.Active = true; kf.Draggable = true
+    Instance.new("\85\73\67\111\114\110\101\114", kf).CornerRadius = UDim.new(0, 15)
+    local kstr = Instance.new("\85\73\83\116\114\111\107\101", kf); kstr.Color = Color3.fromRGB(0, 150, 255); kstr.Thickness = 3
+    _0x_APPLY_BG(kf, 0.1)
+    
+    local kt = Instance.new("\84\101\120\116\76\97\98\101\108", kf); kt.Size = UDim2.new(1, 0, 0, 70); kt.Text = "\79\120\121\103\101\110\72\117\98\32\75\101\121"
+    kt.TextColor3 = Color3.fromRGB(0, 200, 255); kt.Font = "\71\111\116\104\97\109\66\111\108\100"; kt.TextSize = 24; kt.BackgroundTransparency = 1; kt.ZIndex = 5
+
+    local ki = Instance.new("\84\101\120\116\66\111\120", kf)
+    ki.Size = UDim2.new(0.85, 0, 0, 55); ki.Position = UDim2.new(0.075, 0, 0, 95); ki.BackgroundColor3 = Color3.fromRGB(20,20,30)
+    ki.Text = ""; ki.PlaceholderText = "\84\121\112\101\32\75\101\121\32\72\101\114\101\46\46\46"; ki.TextColor3 = Color3.fromRGB(255,255,255); ki.ZIndex = 5; Instance.new("\85\73\67\111\114\110\101\114", ki)
+
+    local kv = Instance.new("\84\101\120\116\66\117\116\116\111\110", kf)
+    kv.Size = UDim2.new(0.85, 0, 0, 50); kv.Position = UDim2.new(0.075, 0, 0, 165); kv.BackgroundColor3 = Color3.fromRGB(0, 140, 220); kv.Text = "\86\101\114\105\102\121\32\75\101\121"
+    kv.TextColor3 = Color3.fromRGB(255,255,255); kv.Font = "\71\111\116\104\97\109\66\111\108\100"; kv.ZIndex = 5; Instance.new("\85\73\67\111\114\110\101\114", kv)
+    _0x_APPLY_BG(kv, 0.3)
+
+    local kd = Instance.new("\84\101\120\116\66\117\116\116\111\110", kf)
+    kd.Size = UDim2.new(0.85, 0, 0, 50); kd.Position = UDim2.new(0.075, 0, 0, 225); kd.BackgroundColor3 = Color3.fromRGB(88, 101, 242); kd.Text = "\71\101\116\32\70\114\101\101\32\75\101\121"
+    kd.TextColor3 = Color3.fromRGB(255,255,255); kd.Font = "\71\111\116\104\97\109\66\111\108\100"; kd.ZIndex = 5; Instance.new("\85\73\67\111\114\110\101\114", kd)
+    _0x_APPLY_BG(kd, 0.3)
+
+    kd.MouseButton1Click:Connect(function() setclipboard(_0x_Map["\108\110\107"]) end)
+    kv.MouseButton1Click:Connect(function() if ki.Text:gsub("\32", "") == _0x_Map["\107\101\121"] then kgui:Destroy() _0x_MAIN_UI() end end)
+end
+_0x_START()
