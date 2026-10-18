@@ -1,0 +1,93 @@
+-- ════════════════════════════════════════════════════════════════════════════
+-- OxygenHub | Auto BunnyHop (Space Basılı Tutunca Zıplar)
+-- ════════════════════════════════════════════════════════════════════════════
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+
+local plr = Players.LocalPlayer
+local bhopEnabled = true
+
+-- ✅ Zıplama Döngüsü
+RunService.Heartbeat:Connect(function()
+    if not bhopEnabled then return end
+    
+    -- Space tuşuna basılı mı?
+    if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+        local char = plr.Character
+        if char then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                -- Havada mı yoksa yerde mi? (Yerdeyse zıpla)
+                if hum.FloorMaterial ~= Enum.Material.Air then
+                    hum.Jump = true
+                    -- Ekstra güvence için state'i zorla
+                    pcall(function()
+                        hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end)
+                end
+            end
+        end
+    end
+end)
+
+-- ✅ Bypass Koruması (Zıplarken düşüp kırılmayı engeller)
+task.spawn(function()
+    while true do
+        task.wait(0.1)
+        local char = plr.Character
+        if char then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+                hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+                hum:SetStateEnabled(Enum.HumanoidStateType.Physics, false)
+                hum.RequiresNeck = false
+                if hum.Sit then hum.Sit = false end
+                
+                -- Eğer oyun seni zorla yatırdıysa kaldır
+                local st = hum:GetState()
+                if st == Enum.HumanoidStateType.Ragdoll or st == Enum.HumanoidStateType.Physics or st == Enum.HumanoidStateType.FallingDown then
+                    pcall(function() hum:ChangeState(Enum.HumanoidStateType.GettingUp) end)
+                end
+            end
+        end
+    end
+end)
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- KÜÇÜK BİR AÇ/KAPA BUTONU (Sol Üstte)
+-- ════════════════════════════════════════════════════════════════════════════
+local gui = Instance.new("ScreenGui")
+gui.Name = "BhopUI"
+gui.ResetOnSpawn = false
+gui.Parent = (gethui and gethui()) or (pcall(function() return CoreGui end) and CoreGui) or plr:WaitForChild("PlayerGui")
+
+local btn = Instance.new("TextButton")
+btn.Parent = gui
+btn.Size = UDim2.new(0, 120, 0, 35)
+btn.Position = UDim2.new(0, 10, 0, 10)
+btn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+btn.TextColor3 = Color3.fromRGB(0, 255, 100)
+btn.Font = Enum.Font.GothamBold
+btn.TextSize = 14
+btn.Text = "BHOP: ON"
+btn.BorderSizePixel = 0
+btn.AutoButtonColor = false
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = btn
+
+btn.MouseButton1Click:Connect(function()
+    bhopEnabled = not bhopEnabled
+    if bhopEnabled then
+        btn.Text = "BHOP: ON"
+        btn.TextColor3 = Color3.fromRGB(0, 255, 100)
+    else
+        btn.Text = "BHOP: OFF"
+        btn.TextColor3 = Color3.fromRGB(255, 60, 60)
+    end
+end)
